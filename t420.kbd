@@ -1,0 +1,312 @@
+;; Required in order to use chords v2
+(defcfg
+  concurrent-tap-hold yes
+)
+
+
+(defsrc
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  caps a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl lmet lalt           spc            ralt rmet rctl
+  ArrowUp ArrowDown ArrowLeft ArrowRight
+)
+
+(deflayer base
+  grv  @asw1 @asw2 @asw3 @asw4 @asw5 @asw6 @asw7 @asw8 @asw9 @asw0 @asw- @asw= bspc
+  tab  @aswQ @aswW @aswE @aswR @aswT @aswY @aswU @aswI @aswO @aswP @asw[ @asw] \
+  @cw  @aswA @aswS @aswD @aswF @aswG @aswH @aswJ @aswK @aswL @asw; @asw' ret
+  @lscl @aswZ @aswX @aswC @aswV @aswB @aswN @aswM @asw, @asw. @asw/ @rscl
+  lctl lmet lalt           spc            @layer2 rmet rctl
+  ArrowUp ArrowDown ArrowLeft ArrowRight
+)
+
+
+;; 2nd layer that is switched to while key is held thru @layer2 in base layer
+;; contains nav keys as well as some easier to reach symbol keys
+(deflayer arwkeys
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    ArrowUp e    r    t    y    u    i    o    ArrowUp [    ]    \
+  caps ArrowLeft ArrowDown ArrowRight f    g    h    j    k    ArrowLeft ArrowDown ArrowRight ret
+  lsft @upshift5 @upshift6 @upshift7 @upshift8 b    n    m    ,    .    /    rsft
+  lctl lmet lalt           spc            ralt rmet rctl
+  ArrowUp ArrowDown ArrowLeft ArrowRight
+)
+
+
+;; This layer should be used whenever access to a simple layout is wanted.
+;; One example is when using caps-word, so that it doesnt get canceled prematurely
+;; when a key is autoshifted. Another is when attempting to use a mod key
+;; other than shift, i.e ctrl-c. The base layer autoshift can conflict and produce
+;; unwanted behaviour
+(deflayer basic
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  caps a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl lmet lalt           spc            ralt rmet rctl
+  ArrowUp ArrowDown ArrowLeft ArrowRight
+)
+
+
+
+(defvar
+  tap-repress-timeout          35
+  hold-timeout                 200
+  combo-timeout                75
+
+  trto $tap-repress-timeout
+  ht $hold-timeout 
+  ct $combo-timeout
+)
+
+
+;; Key Combos that are ported over from my usual qmk/via/vial keyboard(s)
+(defchordsv2
+  (s d) @upshift, $ct all-released (arwkeys) ;; <
+  (k l) @upshift. $ct all-released (arwkeys)  ;; >
+  (k w) ArrowUp $ct all-released (arwkeys) ;; up
+  (k a) ArrowLeft $ct all-released (arwkeys) ;; left
+  (k s) ArrowDown $ct all-released (arwkeys) ;; down
+  (k d) ArrowRight $ct all-released (arwkeys) ;; right
+  (e q) = $ct all-released (arwkeys) ;; =
+)
+
+
+;; This alias should hold all the names for the layers to use
+(defalias
+  layer2 (layer-while-held arwkeys)
+)
+
+;; Anything that requires/could use a alias and does not need complex
+;; setup can be defined here
+(defalias
+  cw (caps-word 2000)
+)
+
+;; The alias allows referring to a shifted key output. Some shifted
+;; keys can be referred directly, but I found it easier to do it this way.
+(defalias
+  upshift1 S-1
+  upshift2 S-2
+  upshift3 S-3
+  upshift4 S-4
+  upshift5 S-5
+  upshift6 S-6
+  upshift7 S-7
+  upshift8 S-8
+  upshift9 S-9
+  upshift0 S-0
+  upshift- S--
+  upshift= S-=
+
+  upshiftq S-q
+  upshiftw S-w
+  upshifte S-e
+  upshiftr S-r
+  upshiftt S-t
+  upshifty S-y
+  upshiftu S-u
+  upshifti S-i
+  upshifto S-o
+  upshiftp S-p
+  upshift[ S-[
+  upshift] S-]
+  
+  upshifta S-a
+  upshifts S-s
+  upshiftd S-d
+  upshiftf S-f
+  upshiftg S-g
+  upshifth S-h
+  upshiftj S-j
+  upshiftk S-k
+  upshiftl S-l
+  upshift; S-;
+  upshift' S-'
+
+  upshiftz S-z
+  upshiftx S-x
+  upshiftc S-c
+  upshiftv S-v
+  upshiftb S-b
+  upshiftn S-n
+  upshiftm S-m
+  upshift, S-,
+  upshift. S-.
+  upshift/ S-/
+)
+
+;; This alias attempts to replicate the autoshift functionality.
+;; While the multi feature of kanata can also be used, it has the downside
+;; of keeping shift active when pressing another key. The prefixing of mod keys
+;; alongside tap-hold does not, behaving closer to how autoshift operates
+;; in qmk/via/vial
+(defalias
+  asw1 (tap-hold $trto $ht 1 @upshift1)
+  asw2 (tap-hold $trto $ht 2 @upshift2)
+  asw3 (tap-hold $trto $ht 3 @upshift3)
+  asw4 (tap-hold $trto $ht 4 @upshift4)
+  asw5 (tap-hold $trto $ht 5 @upshift5)
+  asw6 (tap-hold $trto $ht 6 @upshift6)
+  asw7 (tap-hold $trto $ht 7 @upshift7)
+  asw8 (tap-hold $trto $ht 8 @upshift8)
+  asw9 (tap-hold $trto $ht 9 @upshift9)
+  asw0 (tap-hold $trto $ht 0 @upshift0)
+  asw- (tap-hold $trto $ht - @upshift-)
+  asw= (tap-hold $trto $ht = @upshift=)
+
+  aswQ (tap-hold $trto $ht q @upshiftq)
+  aswW (tap-hold $trto $ht w @upshiftw)
+  aswE (tap-hold $trto $ht e @upshifte)
+  aswR (tap-hold $trto $ht r @upshiftr)
+  aswT (tap-hold $trto $ht t @upshiftt)
+  aswY (tap-hold $trto $ht y @upshifty)
+  aswU (tap-hold $trto $ht u @upshiftu)
+  aswI (tap-hold $trto $ht i @upshifti)
+  aswO (tap-hold $trto $ht o @upshifto)
+  aswP (tap-hold $trto $ht p @upshiftp)
+  asw[ (tap-hold $trto $ht [ @upshift[)
+  asw] (tap-hold $trto $ht ] @upshift])
+
+  aswA (tap-hold $trto $ht a @upshifta)
+  aswS (tap-hold $trto $ht s @upshifts)
+  aswD (tap-hold $trto $ht d @upshiftd)
+  aswF (tap-hold $trto $ht f @upshiftf)
+  aswG (tap-hold $trto $ht g @upshiftg)
+  aswH (tap-hold $trto $ht h @upshifth)
+  aswJ (tap-hold $trto $ht j @upshiftj)
+  aswK (tap-hold $trto $ht k @upshiftk)
+  aswL (tap-hold $trto $ht l @upshiftl)
+  asw; (tap-hold $trto $ht ; @upshift;)
+  asw' (tap-hold $trto $ht ' @upshift')
+
+  aswZ (tap-hold $trto $ht z @upshiftz)
+  aswX (tap-hold $trto $ht x @upshiftx)
+  aswC (tap-hold $trto $ht c @upshiftc)
+  aswV (tap-hold $trto $ht v @upshiftv)
+  aswB (tap-hold $trto $ht b @upshiftb)
+  aswN (tap-hold $trto $ht n @upshiftn)
+  aswM (tap-hold $trto $ht m @upshiftm)
+  asw, (tap-hold $trto $ht , @upshift,)
+  asw. (tap-hold $trto $ht . @upshift.)
+  asw/ (tap-hold $trto $ht / @upshift/)
+
+
+  ;; These attempt to replicate space cadet functionality
+  ;; as such they  may use different values for $trto and $ht
+  lscl (tap-hold 50 150 @upshift9 lsft)
+  rscl (tap-hold 50 150 @upshift0 rsft)
+
+)
+
+
+#| Old setup for autoshift-word functionality
+(defalias
+  shift1 (multi lsft 1)
+  shift2 (multi lsft 2)
+  shift3 (multi lsft 3)
+  shift4 (multi lsft 4)
+  shift5 (multi lsft 5)
+  shift6 (multi lsft 6)
+  shift7 (multi lsft 7)
+  shift8 (multi lsft 8)
+  shift9 (multi lsft 9)
+  shift0 (multi lsft 0)
+  shift- (multi lsft -)
+  shift= (multi lsft =)
+
+  shiftQ (multi lsft q)
+  shiftW (multi lsft w)
+  shiftE (multi lsft e)
+  shiftR (multi lsft r)
+  shiftT (multi lsft t)
+  shiftY (multi lsft y)
+  shiftU (multi lsft u)
+  shiftI (multi lsft i)
+  shiftO (multi lsft o)
+  shiftP (multi lsft p)
+  shift[ (multi lsft [)
+  shift] (multi lsft ])
+  
+  shiftA (multi lsft a)
+  shiftS (multi lsft s)
+  shiftD (multi lsft d)
+  shiftF (multi lsft f)
+  shiftG (multi lsft g)
+  shiftH (multi lsft h)
+  shiftJ (multi lsft j)
+  shiftK (multi lsft k)
+  shiftL (multi lsft l)
+  shift; (multi lsft ;)
+  shift' (multi lsft ')
+
+  shiftZ (multi lsft z)
+  shiftX (multi lsft x)
+  shiftC (multi lsft c)
+  shiftV (multi lsft v)
+  shiftB (multi lsft b)
+  shiftN (multi lsft n)
+  shiftM (multi lsft m)
+  shift, (multi lsft ,)
+  shift. (multi lsft .)
+  shift/ (multi lsft /)
+
+
+  asw1 (multi f24 (tap-hold $trto $ht 1 @shift1))
+  asw2 (multi f24 (tap-hold $trto $ht 2 @shift2))
+  asw3 (multi f24 (tap-hold $trto $ht 3 @shift3))
+  asw4 (multi f24 (tap-hold $trto $ht 4 @shift4))
+  asw5 (multi f24 (tap-hold $trto $ht 5 @shift5))
+  asw6 (multi f24 (tap-hold $trto $ht 6 @shift6))
+  asw7 (multi f24 (tap-hold $trto $ht 7 @shift7))
+  asw8 (multi f24 (tap-hold $trto $ht 8 @shift8))
+  asw9 (multi f24 (tap-hold $trto $ht 9 @shift9))
+  asw0 (multi f24 (tap-hold $trto $ht 0 @shift0))
+  asw- (multi f24 (tap-hold $trto $ht - @shift-))
+  asw= (multi f24 (tap-hold $trto $ht = @shift=))
+
+  aswQ (multi f24 (tap-hold $trto $ht q @shiftQ))
+  aswW (multi f24 (tap-hold $trto $ht w @shiftW))
+  aswE (multi f24 (tap-hold $trto $ht e @shiftE))
+  aswR (multi f24 (tap-hold $trto $ht r @shiftR))
+  aswT (multi f24 (tap-hold $trto $ht t @shiftT))
+  aswY (multi f24 (tap-hold $trto $ht y @shiftY))
+  aswU (multi f24 (tap-hold $trto $ht u @shiftU))
+  aswI (multi f24 (tap-hold $trto $ht i @shiftI))
+  aswO (multi f24 (tap-hold $trto $ht o @shiftO))
+  aswP (multi f24 (tap-hold $trto $ht p @shiftP))
+  asw[ (multi f24 (tap-hold $trto $ht [ @shift[))
+  asw] (multi f24 (tap-hold $trto $ht ] @shift]))
+
+  aswA (multi f24 (tap-hold $trto $ht a @shiftA))
+  aswS (multi f24 (tap-hold $trto $ht s @shiftS))
+  aswD (multi f24 (tap-hold $trto $ht d @shiftD))
+  aswF (multi f24 (tap-hold $trto $ht f @shiftF))
+  aswG (multi f24 (tap-hold $trto $ht g @shiftG))
+  aswH (multi f24 (tap-hold $trto $ht h @shiftH))
+  aswJ (multi f24 (tap-hold $trto $ht j @shiftJ))
+  aswK (multi f24 (tap-hold $trto $ht k @shiftK))
+  aswL (multi f24 (tap-hold $trto $ht l @shiftL))
+  asw; (multi f24 (tap-hold $trto $ht ; @shift;))
+  asw' (multi f24 (tap-hold $trto $ht ' @shift'))
+
+  aswZ (multi f24 (tap-hold $trto $ht z @shiftZ))
+  aswX (multi f24 (tap-hold $trto $ht x @shiftX))
+  aswC (multi f24 (tap-hold $trto $ht c @shiftC))
+  aswV (multi f24 (tap-hold $trto $ht v @shiftV))
+  aswB (multi f24 (tap-hold $trto $ht b @shiftB))
+  aswN (multi f24 (tap-hold $trto $ht n @shiftN))
+  aswM (multi f24 (tap-hold $trto $ht m @shiftM))
+  asw, (multi f24 (tap-hold $trto $ht , @shift,))
+  asw. (multi f24 (tap-hold $trto $ht . @shift.))
+  asw/ (multi f24 (tap-hold $trto $ht / @shift/))
+
+
+
+  lscl (multi f24 (tap-hold 50 150 @shift9 lsft))
+  rscl (multi f24 (tap-hold 50 150 @shift0 rsft))
+
+)
+|#
