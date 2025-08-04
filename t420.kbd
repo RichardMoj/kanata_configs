@@ -15,8 +15,8 @@
 
 (deflayer base
   grv  @asw1 @asw2 @asw3 @asw4 @asw5 @asw6 @asw7 @asw8 @asw9 @asw0 @asw- @asw= bspc
-  tab  @aswQ @aswW @aswE @aswR @aswT @aswY @aswU @aswI @aswO @aswP @asw[ @asw] \
-  @cw  @aswA @aswS @aswD @aswF @aswG @aswH @aswJ @aswK @aswL @asw; @asw' ret
+  tab  @aswQ @aswW @aswE @aswR @aswT @aswY @aswU @aswI @aswO @aswP @asw[ @asw] @asw\
+  @upshift- @aswA @aswS @aswD @aswF @aswG @aswH @aswJ @aswK @aswL @asw; @asw' ret
   @lscl @aswZ @aswX @aswC @aswV @aswB @aswN @aswM @asw, @asw. @asw/ @rscl
   lctl lmet lalt           spc            @layer2 rmet rctl
   ArrowUp ArrowDown ArrowLeft ArrowRight
@@ -71,6 +71,7 @@
   (k s) ArrowDown $ct all-released (arwkeys) ;; down
   (k d) ArrowRight $ct all-released (arwkeys) ;; right
   (e q) = $ct all-released (arwkeys) ;; =
+  (lsft rsft) @cw $ct all-released (arwkeys) ;; capsword
 )
 
 
@@ -113,6 +114,7 @@
   upshiftp S-p
   upshift[ S-[
   upshift] S-]
+  upshift\ S-\
   
   upshifta S-a
   upshifts S-s
@@ -169,6 +171,7 @@
   aswP (tap-hold $trto $ht p @upshiftp)
   asw[ (tap-hold $trto $ht [ @upshift[)
   asw] (tap-hold $trto $ht ] @upshift])
+  asw\ (tap-hold $trto $ht \ @upshift\)
 
   aswA (tap-hold $trto $ht a @upshifta)
   aswS (tap-hold $trto $ht s @upshifts)
@@ -198,6 +201,9 @@
   ;; as such they  may use different values for $trto and $ht
   lscl (tap-hold 50 150 @upshift9 lsft)
   rscl (tap-hold 50 150 @upshift0 rsft)
+
+  ;; underscore on tap, capsword on hold
+  cpslk (tap-hold $trto 150 @upshift- @cw)
 
 )
 
